@@ -1,0 +1,59 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+
+    private static final Map<Character, String> cipherMap = new HashMap<>();
+    private static final Map<String, Character> reverseCipherMap = new HashMap<>();
+
+    static {
+        String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+        int row = 1, col = 1;
+
+        for (String letter : alphabet) {
+            if (letter.equals("J")) {
+                cipherMap.put('I', row + "" + col);
+                reverseCipherMap.put(row + "" + col, 'I');
+            } else {
+                cipherMap.put(letter.charAt(0), row + "" + col);
+                reverseCipherMap.put(row + "" + col, letter.charAt(0));
+            }
+
+            col++;
+            if (col > 5) {
+                col = 1;
+                row++;
+            }
+        }
+    }
+
+    public static String encrypt(String plaintext) {
+        StringBuilder encrypted = new StringBuilder();
+        plaintext = plaintext.toUpperCase().replaceAll("[^A-Z]", "");
+
+        for (int i = 0; i < plaintext.length(); i++) {
+            char ch = plaintext.charAt(i);
+            encrypted.append(cipherMap.get(ch)).append(" ");
+        }
+        return encrypted.toString().trim();
+    }
+
+    public static String decrypt(String ciphertext) {
+        StringBuilder decrypted = new StringBuilder();
+        String[] codes = ciphertext.split(" ");
+
+        for (String code : codes) {
+            decrypted.append(reverseCipherMap.get(code));
+        }
+
+        return decrypted.toString();
+    }
+
+    public static void main(String[] args) {
+        String plaintext = "HELLO WORLD";
+        System.out.println("Mətnin Şifrələnməsi: " + encrypt(plaintext));
+
+        String ciphertext = "23 15 31 31 34 52 34 42 31 14";
+        System.out.println("Şifrəli Mətnin Deşifrə Edilməsi: " + decrypt(ciphertext));
+    }
+}
